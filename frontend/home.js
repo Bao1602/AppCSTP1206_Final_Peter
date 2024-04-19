@@ -3,7 +3,7 @@ let expenseList = [];
 function checkIfUserLoggedIn(){
     const token = localStorage.getItem('token');
     if(!token){
-        window.location.href = 'http://localhost:4000';
+        window.location.href = 'https://appcstp1206-final-peter.onrender.com/index.html';
     }
 }
 
@@ -106,7 +106,7 @@ async function deleteExpense(expenseId) {
 function logout(event) {
     event.preventDefault();
     localStorage.removeItem('token');
-    window.location.href = 'http://localhost:4000';
+    window.location.href = 'https://appcstp1206-final-peter.onrender.com/index.html';
 }
 
 checkIfUserLoggedIn();
