@@ -69,7 +69,7 @@ async function generateAllExpenses(expenseList){
 
     for(let expense of expenseList) {
         const expenseItem = 
-       ` <div class="border-gray-300 bg-white-300 p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
+       ` <div class="border-gray-300 bg-white-400 p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
             <div class ="bg-white" >${expense.expenseName} / ${expense.amount}$ | ${expense.date} | category:${expense.category}</div>
             <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="${expense._id}" onclick="deleteExpense('${expense._id}')">Delete</button>
         </div>`
