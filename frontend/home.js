@@ -82,7 +82,7 @@ async function generateAllExpenses(expenseList){
 async function deleteExpense(expenseId) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/v1/user/expense/${expenseId}`, {
+        const expenseDelete = await fetch(`/api/v1/user/expense/${expenseId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,8 +90,8 @@ async function deleteExpense(expenseId) {
             }
         });
 
-        if (response.ok) {
-            const deletedExpense = await response.json();
+        if (expenseDelete) {
+            const deletedExpense = await expenseDelete.json();
             console.log('Expense deleted successfully:', deletedExpense);
             getAllExpenses();
 
