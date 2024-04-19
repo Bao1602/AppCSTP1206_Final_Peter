@@ -55,7 +55,7 @@ async function loginUser(event){
         if(loggedInUserJson) {
             localStorage.setItem('token', loggedInUserJson.data.token);
             alert(loggedInUserJson.message);
-            window.location.href = 'http://localhost:4000/home.html';
+            window.location.href = 'https://appcstp1206-final-peter.onrender.com/home.html';
         }
     } catch(error){
         alert("There is an error in Loggin")
