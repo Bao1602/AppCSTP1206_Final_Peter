@@ -11,7 +11,7 @@ Router.post('/', ExpenseController.CreateExpense);
 Router.get('/',ExpenseController.GetAllExpenses);
 
 //delete API
-//Router.delete('/',ExpenseController.DeleteExpense);
+Router.delete('/:expenseId',ExpenseController.DeleteExpense);
 
 
 

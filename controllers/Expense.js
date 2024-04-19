@@ -28,13 +28,11 @@ const CreateExpense = async (req,res) => {
     }
     const token = allHeaders.authorization;
 
-
-
     const decodedToken = jwt.decode(token, {complete: true});
 
     const userId = decodedToken.payload.id;
 
-    const userExists = await UserModel.findById(userId)
+    const userExists = await UserModel.findById(userId);
 
     if(!userExists){
         return res.status(401).json({
@@ -59,50 +57,50 @@ const CreateExpense = async (req,res) => {
     })
 }
 
-// const DeleteExpense = async (req, res) => {
-//     const allHeaders = req.headers;
+const DeleteExpense = async (req, res) => {
+    const allHeaders = req.headers;
 
-//     if (!allHeaders.authorization) {
-//         return res.status(401).json({
-//             message: "Please provide the token"
-//         });
-//     }
+    if (!allHeaders.authorization) {
+        return res.status(401).json({
+            message: "Please provide the token"
+        });
+    }
 
-//     const token = allHeaders.authorization;
+    const token = allHeaders.authorization;
 
-//     const decodedToken = jwt.decode(token, { complete: true });
+    const decodedToken = jwt.decode(token, { complete: true });
 
-//     const userId = decodedToken.payload.id;
+    const userId = decodedToken.payload.id;
 
-//     const userExists = await UserModel.findById(userId);
+    const userExists = await UserModel.findById(userId);
 
-//     if (!userExists) {
-//         return res.status(401).json({
-//             message: 'You are not authorized to delete an expense'
-//         });
-//     }
+    if (!userExists) {
+        return res.status(401).json({
+            message: 'You are not authorized to delete an expense'
+        });
+    }
 
-//     const expenseId = req.params.expenseId; 
-//     try {
-//         const deletedExpense = await ExpenseModel.findOneAndDelete({ _id: expenseId, user: userId });
+    const expenseId = req.params.expenseId; 
+    try {
+        const deletedExpense = await ExpenseModel.findOneAndDelete({ _id: expenseId, user: userId });
 
-//         if (!deletedExpense) {
-//             return res.status(404).json({
-//                 message: 'Expense not found or you are not authorized to delete it'
-//             });
-//         }
+        if (!deletedExpense) {
+            return res.status(404).json({
+                message: 'Expense not found or you are not authorized to delete it'
+            });
+        }
 
-//         return res.status(200).json({
-//             message: "Expense Deleted Successfully",
-//             data: deletedExpense
-//         });
-//     } catch (error) {
-//         console.error("Error deleting expense:", error);
-//         return res.status(500).json({
-//             message: 'Error deleting the expense'
-//         });
-//     }
-// };
+        return res.status(200).json({
+            message: "Expense Deleted Successfully",
+            data: deletedExpense
+        });
+    } catch (error) {
+        console.error("Error deleting expense:", error);
+        return res.status(500).json({
+            message: 'Error deleting the expense'
+        });
+    }
+};
 
 
 
@@ -111,4 +109,5 @@ const CreateExpense = async (req,res) => {
 module.exports = {
     GetAllExpenses,
     CreateExpense,
+    DeleteExpense
 }
