@@ -67,14 +67,21 @@ async function generateAllExpenses(expenseList){
 
     expensesElements.innerHTML = "";
 
+    const token=decodeToken(localStorage.getItem(`token`))
+    
+    const userID=token.payload.id
+
     for(let expense of expenseList) {
-        const expenseItem = 
-       `<div class="border-gray-300 bg-white p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
-            <div>${expense.expenseName} / ${expense.amount}$ | ${expense.date} | category:${expense.category}</div>
+        if(expense.user==userID){
+            const expenseItem = 
+       ` <div class="border-gray-300 bg-gray-400 p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
+            <h1>${expense.expenseName} / ${expense.amount}$ | ${expense.date} | category:${expense.category}</h1>
             <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="${expense._id}" onclick="deleteExpense('${expense._id}')">Delete</button>
         </div>`
 
         expensesElements.innerHTML += expenseItem;
+
+        }
     }
 
 }
@@ -108,6 +115,24 @@ function logout(event) {
     localStorage.removeItem('token');
     window.location.href = 'https://appcstp1206-final-peter.onrender.com/index.html';
 }
+
+function decodeToken(token) {
+    const arrayToken = token.split('.');
+    const tokenHeader = JSON.parse(atob(arrayToken[0]));
+    const tokenPayload = JSON.parse(atob(arrayToken[1]));
+    return {
+        header: tokenHeader,
+        payload: tokenPayload
+    };
+}
+
+// export function isTokenExpired(token) {
+//     const arrayToken = token.split('.');
+//     const tokenPayload = JSON.parse(atob(arrayToken[1]));
+//     return Math.floor(new Date().getTime() / 1000) >= tokenPayload?.sub;
+//   }
+//   const token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+//   isTokenExpired(token); //true
 
 checkIfUserLoggedIn();
 getAllExpenses();
