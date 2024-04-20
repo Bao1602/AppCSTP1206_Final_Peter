@@ -62,28 +62,47 @@ async function getAllExpenses(){
     }
 }
 
-async function generateAllExpenses(expenseList){
-    const expensesElements = document.getElementById('allExpense');
+function filterExpensesByMonth() {
 
+    const selectedMonth = document.getElementById('monthSelector').value;
+    const monthlyExpenses = getMonthlyExpenses(expenseList, selectedMonth);
+    generateAllExpenses(monthlyExpenses);
+}
+
+function getMonthlyExpenses(expenseList, selectedMonth) {
+    const currentYear = new Date().getFullYear(); //Date object getfullyear() = give the whole year
+
+    return expenseList.filter(expense => {
+        const expenseDate = new Date(expense.date); //Get the expense date
+        const expenseMonth = expenseDate.getMonth() + 1; //Get month january = 0 so +1
+        const expenseYear = expenseDate.getFullYear();
+
+        return expenseMonth === parseInt(selectedMonth) && expenseYear === currentYear; //check if the same year
+    });
+}
+
+async function generateAllExpenses(expenseList) {
+    const expensesElements = document.getElementById('allExpense');
     expensesElements.innerHTML = "";
 
-    const token=decodeToken(localStorage.getItem(`token`))
-    
-    const userID=token.payload.id
+    const token = decodeToken(localStorage.getItem('token'));
+    const userID = token.payload.id;
 
-    for(let expense of expenseList) {
-        if(expense.user==userID){
-            const expenseItem = 
-       ` <div class="border-gray-300 bg-gray-400 p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
-            <h1>${expense.expenseName} / ${expense.amount}$ | ${expense.date} | category:${expense.category}</h1>
-            <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="${expense._id}" onclick="deleteExpense('${expense._id}')">Delete</button>
-        </div>`
+    for (let expense of expenseList) {
+        if (userID == expense.user) {
+            const expenseItem = `
+                <div class="border-gray-300 bg-gray-400 p-6 space-y-4 md:space-y-6 sm:p-8 mb-5">
+                    <h1>${expense.expenseName} | ${expense.amount}$ | ${expense.date} | category:${expense.category} </h1>
+                    <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="${expense._id}" onclick="deleteExpense('${expense._id}')">Delete</button>
+                </div>`;
 
-        expensesElements.innerHTML += expenseItem;
-
+            expensesElements.innerHTML += expenseItem;
         }
     }
 
+    const totalMonthlyExpense = expenseList.reduce((total, expense) => total + parseFloat(expense.amount), 0); // array1.reduce((accumulator, currentValue) => accumulator + currentValue,initialValue,);
+    const totalExpenseElement = `<p class="bg-red-500 text-white font-bold py-2 px-4 rounded"> Total Monthly Expense: $${totalMonthlyExpense}</p> `
+    expensesElements.innerHTML += totalExpenseElement
 }
 
 async function deleteExpense(expenseId) {
@@ -102,8 +121,6 @@ async function deleteExpense(expenseId) {
             console.log('Expense deleted successfully:', deletedExpense);
             getAllExpenses();
 
-        } else {
-            console.error('Failed to delete expense');
         }
     } catch (error) {
         console.error('Error deleting expense:', error);
@@ -117,7 +134,7 @@ function logout(event) {
 }
 
 function decodeToken(token) {
-    const arrayToken = token.split('.');
+    const arrayToken = token.split('.'); 
     const tokenHeader = JSON.parse(atob(arrayToken[0]));
     const tokenPayload = JSON.parse(atob(arrayToken[1]));
     return {
